@@ -1,5 +1,4 @@
 package com.narxoz.rpg.chain;
-
 import com.narxoz.rpg.arena.ArenaFighter;
 
 public class HpHandler extends DefenseHandler {

@@ -1,10 +1,8 @@
 package com.narxoz.rpg.chain;
-
 import com.narxoz.rpg.arena.ArenaFighter;
 
 public class ArmorHandler extends DefenseHandler {
     private final int armorValue;
-
     public ArmorHandler(int armorValue) {
         this.armorValue = armorValue;
     }

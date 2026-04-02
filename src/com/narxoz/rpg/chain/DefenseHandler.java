@@ -1,10 +1,8 @@
 package com.narxoz.rpg.chain;
-
 import com.narxoz.rpg.arena.ArenaFighter;
 
 public abstract class DefenseHandler {
     private DefenseHandler next;
-
     public DefenseHandler setNext(DefenseHandler next) {
         this.next = next;
         return next;
