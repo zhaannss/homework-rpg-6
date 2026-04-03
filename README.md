@@ -1,80 +1,66 @@
-# Homework 6: RPG Grand Arena Tournament
-## Chain of Responsibility + Command
+# Homework 6 — Grand Arena Tournament
+## Chain of Responsibility + Command Pattern
 
 ---
 
-## Overview
+## What Was Implemented
 
-This homework continues the RPG series. You will implement two **behavioral** design patterns
-in an arena tournament setting, building on the game world introduced in previous homeworks.
+### Chain of Responsibility (Defense Chain)
+Incoming damage passes through 4 handlers in order:
 
-| Pattern | Role in this homework |
-|---------|----------------------|
-| **Command** | Encapsulate hero actions as objects, queue them, and support pre-execution undo |
-| **Chain of Responsibility** | Route incoming damage through a sequence of defense handlers |
+- **DodgeHandler** — random roll, if successful the attack is fully absorbed and the chain stops
+- **BlockHandler** — reduces damage by a percentage, always passes the remainder forward
+- **ArmorHandler** — reduces damage by a flat value, always passes the remainder forward
+- **HpHandler** — terminal handler, applies the final damage to HP
+
+### Command Pattern (Action Queue)
+Hero actions are encapsulated as command objects:
+
+- **AttackCommand** — deals damage to the opponent, supports undo
+- **HealCommand** — heals the hero using a potion, supports undo
+- **DefendCommand** — boosts dodge chance, supports undo
+- **ActionQueue** — manages the queue: enqueue, undoLast, executeAll
+
+### TournamentEngine
+Combines both patterns in a multi-round battle. The hero queues actions each round, and opponent attacks are routed through the defense chain.
 
 ---
 
-## Connection to Previous Homeworks
+## How to Run
 
-| Homework | Patterns | Scenario |
-|----------|----------|----------|
-| HW3 | Singleton + Adapter | BattleEngine manages hero vs enemy combatants |
-| HW4 | Bridge + Composite | Raid mode — team hierarchies and skill-effect combinations |
-| HW5 | Decorator + Facade | Dungeon run — decorated attacks, DungeonFacade workflow |
-| **HW6** | **Chain of Responsibility + Command** | **Grand Arena Tournament** |
+**Compile (PowerShell):**
+```powershell
+javac -d out (Get-ChildItem -Recurse -Filter *.java src | ForEach-Object { $_.FullName })
+```
 
----
-
-## What You Will Build
-
-### Command Pattern
-- `ActionCommand` interface (provided)
-- `AttackCommand`, `HealCommand`, `DefendCommand` — encapsulate hero actions with execute/undo
-- `ActionQueue` — the invoker: enqueue, undo, execute all
-
-### Chain of Responsibility
-- `DefenseHandler` abstract class (partially provided)
-- `DodgeHandler`, `BlockHandler`, `ArmorHandler`, `HpHandler` — concrete defense handlers
-
-### Integration
-- `TournamentEngine` — runs multi-round battles using both patterns together
-- `Main.java` demo — proves both patterns work, including an undo demo
+**Run:**
+```powershell
+java -cp out com.narxoz.rpg.Main
+```
 
 ---
 
 ## Project Structure
 
 ```
-homework-rpg-6/
-├── ASSIGNMENT.md          Full requirements and grading rubric
-├── QUICKSTART.md          Setup, compile/run instructions, recommended order
-├── STUDENT_CHECKLIST.md   Phase-by-phase checklist
-├── AGENTS.md              Repo structure, build commands, coding style
-└── src/com/narxoz/rpg/
-    ├── Main.java
-    ├── command/           ActionCommand, AttackCommand, HealCommand, DefendCommand, ActionQueue
-    ├── chain/             DefenseHandler, DodgeHandler, BlockHandler, ArmorHandler, HpHandler
-    ├── arena/             ArenaFighter, ArenaOpponent, TournamentResult
-    ├── tournament/        TournamentEngine
-    └── hints/             COMMAND_HINTS.md, CHAIN_HINTS.md
+src/com/narxoz/rpg/
+├── Main.java
+├── arena/
+│   ├── ArenaFighter.java
+│   ├── ArenaOpponent.java
+│   └── TournamentResult.java
+├── chain/
+│   ├── DefenseHandler.java
+│   ├── DodgeHandler.java
+│   ├── BlockHandler.java
+│   ├── ArmorHandler.java
+│   └── HpHandler.java
+├── command/
+│   ├── ActionCommand.java
+│   ├── AttackCommand.java
+│   ├── HealCommand.java
+│   ├── DefendCommand.java
+│   └── ActionQueue.java
+└── tournament/
+    └── TournamentEngine.java
 ```
-
----
-
-## Running the Project
-
-Compile and run from the project root (PowerShell):
-
-```powershell
-javac -d out (Get-ChildItem -Recurse -Filter *.java src | ForEach-Object { $_.FullName })
-java -cp out com.narxoz.rpg.Main
-```
-
----
-
-## Deliverables
-
-1. All Java source files with TODOs implemented
-2. `Main.java` demonstrating both patterns
-3. Two UML class diagrams (Command hierarchy, Chain of Responsibility hierarchy)
